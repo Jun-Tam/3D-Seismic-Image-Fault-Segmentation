@@ -21,6 +21,7 @@ def load_trained_model(path_home, name_model, name_weights):
     return model
 
 def pred_subvlms(path_home, name_dataset, name_subset, model):
+    ''' Predict fault probability for a single seismic sub-volume '''
     size_vlm=np.array([1,1,1])*128
     path_dataset = os.path.join(path_home, 'dataset', name_dataset, name_subset)
     path_seis = os.path.join(path_dataset, 'seis')
@@ -48,6 +49,10 @@ class pred_segy:
         self.save_pred(path_home, name_dataset, name_subset)
         
     def dataload_segy(self, path_seis,size_vlm,idx0_vlm):
+        '''
+        This function loads a segy file and quary a subvolume defined by
+        size_vlm and idx0_vlm.
+        '''
         t0 = time()
         print('Start Loading Segy Data')
         file_segy = _read_segy(path_seis).traces
@@ -119,6 +124,7 @@ class pred_segy:
 
     # set gaussian weights in the overlap bounaries
     def getMask(self, os):
+        ''' Set gaussian weights in the overlap bounaries '''
         n1, n2, n3 = self.size_subvlm[0],self.size_subvlm[1],self.size_subvlm[2]
         sc = np.zeros(self.size_subvlm,dtype=np.single)
         sc = sc+1

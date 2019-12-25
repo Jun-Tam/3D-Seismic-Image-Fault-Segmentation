@@ -5,6 +5,7 @@ from matplotlib.widgets import Slider, Button
 
 ''' Display slices '''
 def plot_metrics(history):
+    ''' Plot metrics history during training '''    
     # list all data in history
     print(history.keys())
     
@@ -33,6 +34,7 @@ def plot_metrics(history):
     plt.show()
 
 def load_data_field(path_home, name_dataset, name_subset, size_vlm):
+    ''' Load field seismic data from a binary file '''
     path_dataset = os.path.join(path_home, 'dataset', name_dataset, name_subset)
     path_seis = os.path.join(path_dataset, 'seis.dat')
     path_pred = os.path.join(path_dataset, 'pred.dat')    
@@ -43,6 +45,7 @@ def load_data_field(path_home, name_dataset, name_subset, size_vlm):
     return seis_vlm, pred_vlm
 
 def load_data_synth(path_home, name_dataset, name_subset, name_file, size_vlm):
+    ''' Load synthetic seismic sub-volume from a binary file '''
     path_dataset = os.path.join(path_home, 'dataset', name_dataset, name_subset)
     path_seis = os.path.join(path_dataset, 'seis', name_file)
     path_fault = os.path.join(path_dataset, 'fault', name_file)

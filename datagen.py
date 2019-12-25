@@ -6,9 +6,9 @@ from scipy.interpolate import RegularGridInterpolator
 import bruges
 from tqdm import tqdm
 import os
-    
-' Parameters for Creating Synthetic Traces'
+
 class DefineParams():
+    """ Parameters for Creating Synthetic Traces """
     def __init__(self, num_data, patch_size):
         size_tr = 200
         nx, ny, nz = ([patch_size]*3)
@@ -174,6 +174,7 @@ class CreateSynthRefl(GenerateParams):
         return flag_zero_counts
 
     def create_1d_model(self, prm):
+        ''' Create 1D synthetic reflectivity model '''
         num_rand = int(prm.nz_tr*0.5)
         idx_refl = np.random.randint(0, prm.nz_tr, num_rand)
         refl = np.zeros(prm.nz_tr)
@@ -181,6 +182,10 @@ class CreateSynthRefl(GenerateParams):
         self.refl = np.tile(refl,[prm.nxy_tr,1])
         
     def deformation(self, prm):
+        """
+            Apply 2D Gaussian and Planar deformation.
+            Computation is parallelized on GPU using cupy.
+        """
         import cupy as cp
         xy_cp = cp.asarray(prm.xy)
         a_cp = cp.asarray(self.a)
@@ -228,6 +233,7 @@ class CreateSynthRefl(GenerateParams):
         self.refl = np.reshape(cp.asnumpy(refl_cp), [prm.nxy_tr, prm.nz_tr])
     
     def throw_shift(self, prm):
+        """ Add fault throw with linear and gaussian offset """
         def z_proj(x, y, z, x0_f, y0_f, z0_f, theta, phi):
             x1 = x0_f+(prm.nx_tr-prm.nx)/2
             y1 = y0_f+(prm.ny_tr-prm.ny)/2
@@ -312,11 +318,13 @@ class CreateSyntheticTrace(CreateSynthRefl):
         self.labels = np.reshape(self.labels, [prm.nx, prm.ny, prm.nz])
         
     def convolve_wavelet(self, prm):
+        ''' Convolve reflectivity model with a Ricker wavelet '''
         wl = bruges.filters.wavelets.ricker(prm.t_lng, prm.dt, self.f0)
         for i in range(prm.nxy_tr):
             self.traces[i,:] = np.convolve(self.refl[i,:], wl, mode='same')
     
     def add_noise(self, prm):
+        ''' Add some noise to traces to imitate real seismic data '''
         order = 5
         nyq = 1 / prm.dt / 2
         low = prm.lcut / nyq
@@ -327,6 +335,7 @@ class CreateSyntheticTrace(CreateSynthRefl):
             self.traces[i,:] = filtfilt(b, a, self.traces[i,:] + noise)
         
     def crop_center_patch(self, prm):
+        ''' Extract the central part in the input size '''
         def func_crop(xyz):
             xyz = np.reshape(xyz, [prm.nx_tr, prm.ny_tr, prm.nz_tr])
             xyz_crop = xyz[prm.x0_tr-prm.x0:prm.x0_tr+prm.x0,
@@ -338,6 +347,7 @@ class CreateSyntheticTrace(CreateSynthRefl):
         self.labels = func_crop(self.labels)
     
     def standardizer(self):
+        ''' Standardize amplitudes within the image '''
         std_func = lambda x: (x - np.mean(x)) / np.std(x)
         tr_std = std_func(self.traces)
         tr_std[tr_std > 1] = 1

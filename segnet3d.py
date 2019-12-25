@@ -9,7 +9,9 @@ class create_model:
         self.compile_convnet(input_size, lr)
     
     def compile_convnet(self, input_size, lr):
+        ''' Compile 3D ConvnNets '''
         def Conv3D_with_prm(model_in, num_filters):
+            ''' Wrapper function to add a conv3D layer to an existing model. '''
             conv = Conv3D(filters=num_filters,
                           kernel_size=(3,3,3),
                           activation='relu',
@@ -18,6 +20,7 @@ class create_model:
             return conv
         
         def conv3d_down(model_in, num_filters, pooling=False):
+            ''' Decoder part (Upward Conv3d Layer Block) '''
             pool = []
             conv = Conv3D_with_prm(model_in, num_filters)
             conv = Conv3D_with_prm(conv, num_filters)
@@ -26,6 +29,7 @@ class create_model:
             return conv, pool
 
         def conv3d_up(model_in, model_merge, num_filters):
+            ''' Encoder part (Downward Conv3d Layer Block) '''
             up = UpSampling3D(size=(2,2,2))(model_in)
             merge = concatenate([up, model_merge], axis=4)
             conv = Conv3D_with_prm(merge, num_filters)
@@ -53,6 +57,7 @@ class create_model:
         self.model = model
 
     def visualize_model(self, path_savefig='model_plot.png'):
+        ''' Draw a model architecture as a png file. '''
         self.model.summary()
         plot_model(self.model, to_file=path_savefig, show_shapes=True, show_layer_names=True)         
 
