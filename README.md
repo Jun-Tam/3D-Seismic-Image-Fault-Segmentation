@@ -1,5 +1,5 @@
 # 3D-Seismic-Image-Fault-Segmentation
-![demo](https://github.com/Jun-Tam/3D-Fault-Segmentation/raw/master/images/demo_application.gif)
+![demo](https://github.com/Jun-Tam/3D-Seismic-Image-Fault-Segmentation/raw/master/images/demo_application.gif)
 
 ### Summary
 Train 3D CNN model with synthetic 3D seismic volumes containing faults.
