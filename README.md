@@ -19,8 +19,9 @@ Feature size: 128 x 128 x 128
 ```
 
 ### Field Data Application
-Netherlands Offshore F3 Block (dGB Open Seismic Repository)
+Netherlands Offshore F3 Block (dGB Open Seismic Repository) <br>
 https://terranubis.com/datainfo/Netherlands-Offshore-F3-Block-Complete
 
 ### Reference
-FaultSeg3D: Using synthetic data sets to train an end-to-end convolutional neural network for 3D seismic fault segmentation,Xinming Wu et al., Geophysics, 2019
+FaultSeg3D: Using synthetic data sets to train an end-to-end convolutional neural network for 3D seismic fault segmentation,
+Xinming Wu et al., Geophysics, 2019
