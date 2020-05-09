@@ -14,7 +14,7 @@ Model architecture: Shallow 3D U-net
 Training Data: 200
 Validataion Data: 20
 Batch size: 3 (Data Augmentation)
-Data Augmentation: z-axis rotation (Randomly choose from 0, 90, 180, 270 deg.)
+Data Augmentation: z-axis rotation (Randomly chosen from 0, 90, 180, 270 deg.)
 Feature size: 128 x 128 x 128
 ```
 
